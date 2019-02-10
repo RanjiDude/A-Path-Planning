@@ -1,8 +1,8 @@
 grid = [[0, 0, 1, 0, 0, 0],
         [0, 0, 1, 0, 0, 0],
-        [0, 0, 0, 0, 1, 0],
+        [0, 0, 1, 0, 1, 0],
         [0, 0, 1, 1, 1, 0],
-        [0, 0, 0, 0, 1, 0]]
+        [0, 0, 0, 0, 0, 0]]
 
 init = [0, 0]
 goal = [len(grid) - 1, len(grid[0]) - 1]
@@ -36,7 +36,6 @@ def search(grid, init, goal, cost):
     closed = [[0 for row in range(len(grid[0]))] for col in range(len(grid))]           # Because closed = grid doesn't work properly
     expand = [[-1 for row in range(len(grid[0]))] for col in range(len(grid))]
     plan = [[' ' for row in range(len(grid[0]))] for col in range(len(grid))]
-    plan[goal[0]][goal[1]] = '*'
     for r in range(len(grid)):
         for c in range(len(grid[0])):
             closed[r][c] = grid[r][c]
@@ -50,7 +49,6 @@ def search(grid, init, goal, cost):
 
     while reached is False and fail is False:
         if len(open_list) == 0:
-            print(expand)
             fail = True
             print('failed')
         else:
@@ -61,23 +59,27 @@ def search(grid, init, goal, cost):
                 selected_list.append(selected)
                 selected_list.sort()
                 selected_list.reverse()
-                # print(selected)
                 # expand[selected[1]][selected[2]] = e
                 # e += 1
                 if selected_cell == goal:
                     reached = True
                     path = selected
-                    print(selected_list)
                     plan_path.append(selected_list[0])
                     for p in plan_path:
                         if p[0] == 0:
                             break
                         coord = valid_neighbors([p[1], p[2]], grid, delta, p[0]-1)
-                        chosen = common_elements(coord, selected_list)[0]
-                        plan_path.append(chosen)
-                    print(plan_path)
-                    # show(grid)
-                    # show(plan)
+                        chosen = common_elements(coord, selected_list)
+                        plan_path.append(chosen[0])
+                    for j in range(len(plan_path)):
+                        if plan_path[j][0] <= 0:
+                            break
+                        difference = [plan_path[j][1]-plan_path[j+1][1], plan_path[j][2]-plan_path[j+1][2]]
+                        for d in range(len(delta)):
+                            if difference == delta[d]:
+                                plan[plan_path[j+1][1]][plan_path[j+1][2]] = delta_name[d]
+                        plan[goal[0]][goal[1]] = '*'
+                    show(plan)
                     break
                 else:
                     open_list.pop(i)
