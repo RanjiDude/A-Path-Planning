@@ -1,8 +1,8 @@
-grid = [[0, 1, 0, 0, 0, 0],
+grid = [[0, 0, 0, 0, 0, 0],
+        [0, 1, 1, 1, 1, 0],
         [0, 1, 0, 0, 0, 0],
         [0, 1, 0, 0, 0, 0],
-        [0, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0]]
+        [0, 1, 0, 0, 0, 0]]
 
 heuristic = [[9, 8, 7, 6, 5, 4],
              [8, 7, 6, 5, 4, 3],
@@ -84,6 +84,7 @@ def search(grid, init, goal, cost, heuristic):
             for i in range(len(open_list)):
                 i = lowest_f(open_list)                         # chooses the open_list element with the lowest f-value
                 selected = open_list[i]
+                # print(selected)
                 selected_cell = [selected[2], selected[3]]
                 f_curr = selected[0]
                 g_curr = selected[1]
@@ -98,10 +99,12 @@ def search(grid, init, goal, cost, heuristic):
                     # print(selected_list)
                     plan_path.append(selected_list[0])
                     for p in plan_path:
-                        if p[1] == 0:
+                        if p[0] == 0:
                             break
                         coord = path_neighbors([p[1], p[2]], grid, delta, p[0]-1)
+                        # print(coord)
                         chosen = common_elements(coord, selected_list)
+                        # print(chosen)
                         plan_path.append(chosen[0])
                     for j in range(len(plan_path)):
                         if plan_path[j][0] <= 0:
